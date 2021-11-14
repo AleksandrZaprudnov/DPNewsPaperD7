@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from .models import Post
 from .filters import NewsFilter
 from .forms import NewsModelForm
@@ -41,12 +42,15 @@ class PostsSearchList(ListView):
         return context
 
 
-class PostCreateView(CreateView):
+class PostCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = 'News.add_post'
+    per = 'News.add_post'
     template_name = 'news/post_create.html'
     form_class = NewsModelForm
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = 'News.change_post'
     template_name = 'news/post_update.html'
     form_class = NewsModelForm
 
